@@ -1,0 +1,13 @@
+examples/
+node_modules/
+src/
+dist/
+tests/
+lib/
+
+.gitignore
+.cache
+.vscode
+.babelrc
+
+rollup.config.js
