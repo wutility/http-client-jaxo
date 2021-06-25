@@ -21,11 +21,15 @@ access via global object Jaxo : window.Jaxo
   let Jaxo = new Jaxo();
 
   let response = await Jaxo.send({
-    url: 'https://jsonplaceholder.typicode.com/todos/1',
-    method: 'get'
+    url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+    method: 'get', // default value
+    async: true, // default value
+    timeout: 2000 // default value
   });
 
   console.log(response);  
+
+  Jaxo.abort() // cancel request
 })();
 ```
 
@@ -52,9 +56,7 @@ access via global object Jaxo : window.Jaxo
       }
     });
 
-    console.log(response);
-
-    Jaxo.abort() // cancel request
+    console.log(response);    
   } catch (error) {
     console.log(error.message);
   }
