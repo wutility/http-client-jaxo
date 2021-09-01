@@ -4,6 +4,8 @@
 
 ![HTTP Client](https://badgen.net/bundlephobia/dependency-count/jaxo) ![HTTP Client](https://badgen.net/npm/v/jaxo) ![HTTP Client](https://badgen.net/bundlephobia/minzip/jaxo) ![HTTP Client](https://badgen.net/npm/dt/jaxo) ![HTTP Client](https://data.jsdelivr.com/v1/package/npm/jaxo/badge)
 
+#### [🔆 Playground](https://wutility.github.io/http-client-jaxo/)
+
 ## Usage
 
 ```js
@@ -19,21 +21,22 @@ Or include it via jsDelivr CDN:
 
 ### Methods
 ```js
-// send request
-const options = { //-> default options
-  method: 'GET',
-  timeout: 2000,
-  async: true,
-  // upload and download progress event
-  onProgress: (percent) => {
+const options = {
+  method: 'GET', //-> default
+  timeout: 2000, //-> default
+  async: true,   //-> default
+  headers: {
+    "Accept": "application/json"
+  },
+  onProgress: (percent) => { //-> upload and download progress event
     console.log(percent)
   }
 }
 
+// Send request
 Jaxo.send(options: Object | String) : Promise
 
-// cancel request
-// xhr is XMLHttpRequest object
+// cancel request (xhr is XMLHttpRequest object)
 Jaxo.xhr.abort()
 ```
 
@@ -42,7 +45,7 @@ Jaxo.xhr.abort()
 ```js
 Jaxo.send('https://jsonplaceholder.typicode.com/users')
   .then(response => {
-    console.log(response);
+    console.log(response)
   })
   .catch(e => {
     console.log(e.message)
@@ -52,27 +55,28 @@ Jaxo.send('https://jsonplaceholder.typicode.com/users')
 ### POST Example
 
 ```js
-(async () => {
+document.getElementById('form-file')
+  .addEventListener('submit', e => {
 
-  let file = e.target.elements[0].files[0];
+    let file = e.target.elements[0].files[0];
 
-  const formData = new FormData();
-  formData.append('key', 'your imgbb key')
-  formData.append('image', file);
-  formData.append('name', 'testing file');
+    const formData = new FormData();
+    formData.append('key', 'your imgbb key')
+    formData.append('image', file);
+    formData.append('name', 'testing file');
 
-  try {
     let response = await Jaxo.send({
       url: 'https://api.imgbb.com/1/upload',
       method: 'POST',
       data: formData
-    });    
-
-    console.log(response);    
-  } catch (error) {
-    console.log(error.message);
-  }
-})();
+    })
+      .then(response => {
+        console.log(response);    
+      })
+      .catch(error => {
+        console.log(error.message);
+      });
+});
 ```
 
 ## Notes

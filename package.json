@@ -1,6 +1,6 @@
 {
   "name": "jaxo",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A lightweight JavaScript library for making AJAX requests.",
   "module": "build/index.esm.js",
   "main": "build/index.js",
