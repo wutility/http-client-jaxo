@@ -11,8 +11,8 @@ import Jaxo from "jaxo";
 Or include it via jsDelivr CDN:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/jaxo@1.0.0/build/index.min.js"></script>
-access via global object Jaxo : window.Jaxo
+<script src="https://cdn.jsdelivr.net/npm/jaxo/build/index.min.js"></script>
+<!-- access via global object Jaxo : window.Jaxo -->
 ```
 
 ### Methods
