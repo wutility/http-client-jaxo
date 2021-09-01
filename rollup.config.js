@@ -5,7 +5,7 @@ export default {
   output: [
     {
       name: 'Jaxo',
-      file: 'build/index.umd.js',
+      file: 'build/index.js',
       format: 'umd'
     },
     {
@@ -13,5 +13,5 @@ export default {
       format: 'esm'
     }
   ],
-  //plugins: [terser()]
+  plugins: [terser()]
 };

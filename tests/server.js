@@ -5,6 +5,7 @@ const querystring = require('querystring')
 
 const routes = {
   '/request': function (res, req) {
+
     res.writeHead(200, { 'Content-Type': 'application/json' })
     var data = ''
     req.on('data', function (c) {
@@ -17,8 +18,7 @@ const routes = {
           url: req.url,
           headers: req.headers,
           data: data
-        })
-      )
+        }))
     })
   },
   '/hello': function (res, req) {
@@ -68,8 +68,8 @@ const routes = {
     res.writeHead(307, { Location: '/hello' })
     res.end()
   },
-  '/redirect/308': function (res) {
-    res.writeHead(308, { Location: '/hello' })
+  '/redirect/309': function (res) {
+    res.writeHead(309, { Location: '/hello' })
     res.end()
   },
   '/boom': function (res) {
@@ -82,10 +82,7 @@ const routes = {
   },
   '/slow': function (res) {
     setTimeout(function () {
-      res.writeHead(200, { 
-        'Cache-Control': 
-        'no-cache, must-revalidate',
-      })
+      res.writeHead(200, { 'Cache-Control': 'no-cache, must-revalidate', })
       res.end()
     }, 5000)
   },
@@ -97,6 +94,7 @@ const routes = {
     res.end('number=1&space=one+two&empty=&encoded=a%2Bb&')
   },
   '/json': function (res) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.writeHead(200, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify({ name: 'Hubot', login: 'hubot' }))
   },
@@ -143,7 +141,7 @@ function router (req, res, next) {
 }
 
 http.createServer(function (req, res) {
-  res.setHeader('Access-Control-Allow-Origin','*');
+  res.setHeader('Access-Control-Allow-Origin', '*');
 
   const next = _ => {
     res.writeHead(500, { 'Content-Type': 'text/plain' })

@@ -1,10 +1,13 @@
 node_modules/
 dist/
 build/
+testr/
 
 examples/
 production/
 
 .cache
 .vscode
+.env
+.env.local
 package-lock.json

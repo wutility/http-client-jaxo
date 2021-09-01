@@ -1,111 +1,114 @@
-export default function Jaxo () {
-  let xhr = new XMLHttpRequest();
-  let ops = {};
+const Jaxo = {
+  options: {
+    method: 'GET',
+    timeout: 2000,
+    async: true
+  },
+  readystate: 0,
+  xhr: new XMLHttpRequest()
+}
 
-  function normalizeMethod (method) {
-    const methods = ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST', 'PUT'];
-    let upper = method.toUpperCase()
-    return methods.includes(upper) ? upper : method
-  }
+Jaxo.normalizeMethod = method => {
+  const methods = ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST', 'PUT'];
+  let upper = method.toUpperCase()
+  return methods.includes(upper) ? upper : method
+}
 
-  function send (options) {
+Jaxo.response = () => {
+  let strHeaders = Jaxo.xhr.getAllResponseHeaders().split(/\n|\r\n/g);
+  let headers = {};
 
-    ops.headers = options.headers;
-    ops.method = normalizeMethod(options.method || 'GET');
-    ops.url = options.url;
-    ops.data = options.data;
-    ops.async = options.async || true;
-    ops.timeout = options.timeout || 2000;
-
-    ops.onProgress = options.onProgress;
-
-    return new Promise((resolve, reject) => {
-
-      xhr.open(ops.method, ops.url, ops.async);
-      xhr.timeout = ops.timeout;
-
-      // handle events [error, timeout, abort, progress]
-      function eventHandler (e) {
-        setTimeout(() => {
-          if (e.type === 'abort') {
-            reject(new DOMException('Aborted', 'AbortError'))
-          }
-          if (e.type === 'progress') {
-            if (e.lengthComputable) {
-              let percent = e.loaded / e.total * 100;
-              ops.onProgress(percent)
-            } else {
-              ops.onProgress('Unable to compute progress information since the total size is unknown');
-            }
-          }
-          else {
-            reject(new TypeError('Network request failed ' + e.type))
-          }
-        }, 0);
-      }
-
-      // set request headers
-      for (let i in ops.headers) {
-        if (ops.headers.hasOwnProperty(i)) {
-          xhr.setRequestHeader(i, ops.headers[i]);
-        }
-      }
-
-      // called when an XMLHttpRequest transaction completes successfully.
-      xhr.onload = () => {
-        let strHeaders = xhr.getAllResponseHeaders().split(/\n|\r\n/g);
-        let headers = {};
-
-        // format response headers
-        strHeaders.forEach(header => {
-          if (header) {
-            let head = header.split(':');
-            let value = head[1].trim();
-            let key = head[0];
-            headers[key] = isNaN(value) ? value : parseInt(value, 10);
-          }
-        });
-
-        // format response   
-        let response = {
-          response: xhr.response,
-          status: xhr.status,
-          statusText: xhr.statusText,
-          headers
-        };
-
-        setTimeout(() => {
-          resolve(response);
-        }, 0);
-      }
-
-      xhr.onreadystatechange = () => {
-        console.log(xhr.readyState);
-        if (xhr.readyState === 4) {
-          // if (response.status >= 200 && response.status < 305) {
-          //   resolve('ok');
-          // } else {
-          //   reject('err');
-          // }
-          setTimeout(() => {
-            xhr.removeEventListener('abort', eventHandler);
-            xhr.removeEventListener('timeout', eventHandler);
-            xhr.removeEventListener('error', eventHandler);
-            if (ops.onProgress) { xhr.removeEventListener('progress', eventHandler); }
-          }, 0);
-        }
-      };
-
-      if (ops.onProgress) { xhr.upload.addEventListener('progress', eventHandler); }
-      xhr.addEventListener('error', eventHandler)
-      xhr.addEventListener('timeout', eventHandler)
-      xhr.addEventListener('abort', eventHandler)
-      xhr.send(ops.data);
-    });
-  }
+  // format response headers
+  strHeaders.forEach(header => {
+    if (header) {
+      let head = header.split(':');
+      let value = head[1].trim();
+      let key = head[0];
+      headers[key] = isNaN(value) ? value : parseInt(value, 10);
+    }
+  });
 
   return {
-    send,
-    abort: () => xhr.abort()
-  }
+    url: Jaxo.options.url,
+    response: Jaxo.xhr.response,
+    status: Jaxo.xhr.status,
+    statusText: Jaxo.xhr.statusText,
+    headers
+  };
 }
+
+Jaxo.send = function (ops) {
+
+  if (typeof ops === 'string') {
+    this.options.url = ops
+  }
+  else {
+    this.options = { ...this.options, ...ops };
+  }
+
+  // set request headers
+  for (let i in this.options.headers) {
+    if (this.options.headers.hasOwnProperty(i)) {
+      this.xhr.setRequestHeader(i, this.options.headers[i]);
+    }
+  }
+
+  return new Promise((resolve, reject) => {
+    this.xhr.onload = function () {
+      setTimeout(() => {
+        resolve(Jaxo.response())
+      }, 0)
+    }
+
+    const errHandler = e => {
+      if (e.type === 'abort') {
+        reject(new DOMException('Aborted', 'AbortError'))
+      }
+      else {
+        reject(new TypeError('Network request failed ' + e.type))
+      }
+    }
+
+    const onProgress = (e) => {
+      if (e.lengthComputable) {
+        let percent = e.loaded / e.total * 100;
+        this.options.onProgress(percent)
+      } else {
+        reject(new TypeError('Unable to compute progress information since the total size is unknown'));
+      }
+    }
+
+    this.xhr.onreadystatechange = () => {
+      this.readyState = this.xhr.readyState
+      self = this
+      if (this.readyState === 4) {
+        setTimeout(() => {
+          self.xhr.removeEventListener('abort', errHandler);
+          self.xhr.removeEventListener('timeout', errHandler);
+          self.xhr.removeEventListener('error', errHandler);
+          if (self.options.onProgress) {
+            self.xhr.removeEventListener('progress', onProgress);
+          }
+        }, 0);
+      }
+    }
+
+    // send data
+    this.xhr.timeout = this.options.timeout;
+    this.xhr.open(this.normalizeMethod(this.options.method), this.options.url, this.options.async);
+    this.xhr.send(this.options.data);
+
+    // handle events
+    this.xhr.addEventListener('timeout', errHandler)
+    this.xhr.addEventListener('error', errHandler)
+    this.xhr.addEventListener('abort', errHandler)
+
+    if (this.options.onProgress) {
+      this.options.method === 'GET'
+        ? this.xhr.addEventListener('progress', onProgress)
+        : this.xhr.upload.addEventListener('progress', onProgress);
+    }
+  });
+}
+
+export default Jaxo

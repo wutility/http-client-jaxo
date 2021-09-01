@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "A lightweight JavaScript library for making AJAX requests.",
   "module": "build/index.esm.js",
-  "browser": "build/index.umd.js",
+  "main": "build/index.js",
+  "browser": "build/index.js",
   "scripts": {
     "watch": "rollup -c -w",
     "clean": "rimraf -rf build/index.js",
@@ -18,17 +19,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/haikelfazzani/cnv.git"
+    "url": "git+https://github.com/haikelfazzani/http-client-jaxo.git"
   },
   "bugs": {
-    "url": "https://github.com/haikelfazzani/cnv.git/issues"
+    "url": "https://github.com/haikelfazzani/http-client-jaxo.git/issues"
   },
-  "homepage": "https://github.com/haikelfazzani/cnv.git#readme",
-  "keywords": [
-    "client",
-    "browser",
+  "homepage": "https://github.com/haikelfazzani/http-client-jaxo.git#readme",
+  "keywords": [    
     "ajax",
     "request",
+    "client",
+    "browser",
+    "XMLHttpRequest",
     "utility"
   ],
   "author": "Haikel Fazzani",

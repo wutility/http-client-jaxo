@@ -14,30 +14,43 @@ Or include it via jsDelivr CDN:
 <script src="https://cdn.jsdelivr.net/npm/jaxo@1.0.0/build/index.min.js"></script>
 access via global object Jaxo : window.Jaxo
 ```
-## GET Example
+
+### Methods
+```js
+// send request
+const options = { //-> default options
+  method: 'GET',
+  timeout: 2000,
+  async: true,
+  // upload and download progress event
+  onProgress: (percent) => {
+    console.log(percent)
+  }
+}
+
+Jaxo.send(options: Object | String) : Promise
+
+// cancel request
+// xhr is XMLHttpRequest object
+Jaxo.xhr.abort()
+```
+
+### GET Example
 
 ```js
 (async () => {
-  let Jaxo = new Jaxo();
-
-  let response = await Jaxo.send({
-    url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
-    method: 'get', // default value
-    async: true, // default value
-    timeout: 2000 // default value
-  });
+  let response = await Jaxo.send('http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4');
 
   console.log(response);  
 
-  Jaxo.abort() // cancel request
+  Jaxo.xhr.abort() // cancel request
 })();
 ```
 
-## POST Example
+### POST Example
 
 ```js
 (async () => {
-  let Jaxo = new window.Jaxo();
 
   let file = e.target.elements[0].files[0];
 
@@ -49,12 +62,9 @@ access via global object Jaxo : window.Jaxo
   try {
     let response = await Jaxo.send({
       url: 'https://api.imgbb.com/1/upload',
-      method: 'post',
-      data: formData,
-      onProgress: (percent) => {
-        console.log(percent);
-      }
-    });
+      method: 'POST',
+      data: formData
+    });    
 
     console.log(response);    
   } catch (error) {

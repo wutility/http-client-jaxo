@@ -4,10 +4,13 @@ src/
 dist/
 tests/
 lib/
+testr/
 
 .gitignore
 .cache
 .vscode
 .babelrc
-
+.env
+.env.local
 rollup.config.js
+package-lock.json
