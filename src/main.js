@@ -45,14 +45,17 @@ Jaxo.send = function (ops) {
     this.options = { ...this.options, ...ops };
   }
 
-  // set request headers
-  for (let i in this.options.headers) {
-    if (this.options.headers.hasOwnProperty(i)) {
-      this.xhr.setRequestHeader(i, this.options.headers[i]);
-    }
-  }
-
   return new Promise((resolve, reject) => {
+
+    this.xhr.open(this.normalizeMethod(this.options.method), this.options.url, this.options.async);
+
+    // set request headers
+    for (let i in this.options.headers) {
+      if (this.options.headers.hasOwnProperty(i)) {
+        this.xhr.setRequestHeader(i, this.options.headers[i]);
+      }
+    }
+
     this.xhr.onload = function () {
       setTimeout(() => {
         resolve(Jaxo.response())
@@ -94,7 +97,6 @@ Jaxo.send = function (ops) {
 
     // send data
     this.xhr.timeout = this.options.timeout;
-    this.xhr.open(this.normalizeMethod(this.options.method), this.options.url, this.options.async);
     this.xhr.send(this.options.data);
 
     // handle events

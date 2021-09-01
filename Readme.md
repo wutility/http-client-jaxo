@@ -2,6 +2,8 @@
 
 ⚡️ **A lightweight JavaScript library for making AJAX requests**
 
+![HTTP Client](https://badgen.net/bundlephobia/dependency-count/jaxo) ![HTTP Client](https://badgen.net/npm/v/jaxo) ![HTTP Client](https://badgen.net/bundlephobia/minzip/jaxo) ![HTTP Client](https://badgen.net/npm/dt/jaxo) ![HTTP Client](https://data.jsdelivr.com/v1/package/npm/jaxo/badge)
+
 ## Usage
 
 ```js
