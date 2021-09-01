@@ -38,13 +38,13 @@ Jaxo.xhr.abort()
 ### GET Example
 
 ```js
-(async () => {
-  let response = await Jaxo.send('http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4');
-
-  console.log(response);  
-
-  Jaxo.xhr.abort() // cancel request
-})();
+Jaxo.send('https://jsonplaceholder.typicode.com/users')
+  .then(response => {
+    console.log(response);
+  })
+  .catch(e => {
+    console.log(e.message)
+  });
 ```
 
 ### POST Example

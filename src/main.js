@@ -30,7 +30,7 @@ Jaxo.response = () => {
 
   return {
     url: Jaxo.options.url,
-    response: Jaxo.xhr.response,
+    data: Jaxo.xhr.response,
     status: Jaxo.xhr.status,
     statusText: Jaxo.xhr.statusText,
     headers
@@ -38,7 +38,6 @@ Jaxo.response = () => {
 }
 
 Jaxo.send = function (ops) {
-
   if (typeof ops === 'string') {
     this.options.url = ops
   }
