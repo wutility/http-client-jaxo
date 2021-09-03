@@ -19,14 +19,15 @@ Or include it via jsDelivr CDN:
 <!-- access via global object Jaxo : window.Jaxo -->
 ```
 
-### Methods
+## Documentation
 ```js
 const options = {
   method: 'GET', //-> default
   timeout: 2000, //-> default
   async: true,   //-> default
   headers: {
-    "Accept": "application/json"
+    "Accept": "application/json, text/plain",
+    "Content-Type": "application/json"
   },
   onProgress: (percent) => { //-> upload and download progress event
     console.log(percent)

@@ -4,7 +4,6 @@ const Jaxo = {
     timeout: 2000,
     async: true
   },
-  readystate: 0,
   xhr: new XMLHttpRequest()
 }
 
@@ -14,7 +13,7 @@ Jaxo.normalizeMethod = method => {
   return methods.includes(upper) ? upper : method
 }
 
-Jaxo.response = () => {
+Jaxo.Response = () => {
   let strHeaders = Jaxo.xhr.getAllResponseHeaders().split(/\n|\r\n/g);
   let headers = {};
 
@@ -24,7 +23,7 @@ Jaxo.response = () => {
       let head = header.split(':');
       let value = head[1].trim();
       let key = head[0];
-      headers[key] = isNaN(value) ? value : parseInt(value, 10);
+      headers[key] = isNaN(value) ? value : Number(value);
     }
   });
 
@@ -58,11 +57,11 @@ Jaxo.send = function (ops) {
 
     this.xhr.onload = function () {
       setTimeout(() => {
-        resolve(Jaxo.response())
+        resolve(Jaxo.Response())
       }, 0)
     }
 
-    const errHandler = e => {
+    const onFail = e => {
       if (e.type === 'abort') {
         reject(new DOMException('Aborted', 'AbortError'))
       }
@@ -81,13 +80,12 @@ Jaxo.send = function (ops) {
     }
 
     this.xhr.onreadystatechange = () => {
-      this.readyState = this.xhr.readyState
       self = this
-      if (this.readyState === 4) {
+      if (this.xhr.readyState === 4) {
         setTimeout(() => {
-          self.xhr.removeEventListener('abort', errHandler);
-          self.xhr.removeEventListener('timeout', errHandler);
-          self.xhr.removeEventListener('error', errHandler);
+          self.xhr.removeEventListener('abort', onFail);
+          self.xhr.removeEventListener('timeout', onFail);
+          self.xhr.removeEventListener('error', onFail);
           if (self.options.onProgress) {
             self.xhr.removeEventListener('progress', onProgress);
           }
@@ -99,10 +97,10 @@ Jaxo.send = function (ops) {
     this.xhr.timeout = this.options.timeout;
     this.xhr.send(this.options.data);
 
-    // handle events
-    this.xhr.addEventListener('timeout', errHandler)
-    this.xhr.addEventListener('error', errHandler)
-    this.xhr.addEventListener('abort', errHandler)
+    // handle fail events
+    this.xhr.addEventListener('timeout', onFail)
+    this.xhr.addEventListener('error', onFail)
+    this.xhr.addEventListener('abort', onFail)
 
     if (this.options.onProgress) {
       this.options.method === 'GET'

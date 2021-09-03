@@ -1,6 +1,6 @@
 {
   "name": "jaxo",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A lightweight JavaScript library for making AJAX requests.",
   "module": "build/index.esm.js",
   "main": "build/index.js",
@@ -31,7 +31,7 @@
     "client",
     "browser",
     "XMLHttpRequest",
-    "utility"
+    "library"
   ],
   "author": "Haikel Fazzani",
   "license": "MIT"

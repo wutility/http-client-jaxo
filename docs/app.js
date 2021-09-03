@@ -1,15 +1,18 @@
 const code = `(async () => {
-  // url for testing: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+  // URL for testing: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+  // Good website for testing: https://reqres.in
   try {
     let response = await Jaxo.send({
       method: 'GET',
-      url: 'https://jsonplaceholder.typicode.com/users',
+      timeout: 0, // default: 2000ms
+      url: 'https://jsonplaceholder.typicode.com/users/1',
       headers: {
-        "Accept": "application/json"
+        "Accept": "application/json, text/plain",
+        "Content-Type": "application/json"
       }
     });
 
-    // you can return only data
+    // parse data
     //-> JSON.parse(response.data)
     return response
   } catch (error) {
