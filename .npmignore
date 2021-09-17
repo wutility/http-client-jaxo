@@ -5,6 +5,10 @@ dist/
 tests/
 lib/
 testr/
+docs/
+samples/
+
+*.md
 
 .gitignore
 .cache

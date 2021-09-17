@@ -1,24 +1,43 @@
-const code = `(async () => {
-  // URL for testing: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-  // Good website for testing: https://reqres.in
-  try {
-    let response = await Jaxo.send({
-      method: 'GET',
-      timeout: 0, // default: 2000ms
-      url: 'https://jsonplaceholder.typicode.com/users/1',
-      headers: {
-        "Accept": "application/json, text/plain",
-        "Content-Type": "application/json"
-      }
-    });
+const selectSamples = document.getElementById('samples')
+const samples = { jsonReqPost, jsonReqGet };
 
-    // parse data
-    //-> JSON.parse(response.data)
-    return response
-  } catch (error) {
-    return error.message
-  }
-})();`;
+const jsBeautyOptions = {
+  'indent_size': 2,
+  'jslint_happy': false,
+  'e4x': true,
+  'brace_style': 'preserve-inline',
+  'break_chained_methods': false,
+  'detect_packers': true
+};
+
+for (const smp in samples) {
+  const option = document.createElement('option')
+  option.value = smp
+  option.textContent = smp
+  selectSamples.appendChild(option)
+}
+
+function generate(value) {
+  return `(async () => {
+    // URL for testing: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    // Good website for testing: https://reqres.in
+    try {
+      let response = await Jaxo.send(${JSON.stringify(value, null, '\t')});
+      
+      return JSON.parse(response.data)
+    } catch (error) {
+      return error.message
+    }
+  })();`
+}
+
+let code = samples[selectSamples.value];
+
+selectSamples.onchange = e => {
+  code = samples[e.target.value];
+  editor.setValue(js_beautify(generate(code), jsBeautyOptions))
+  console.log(generate(code));
+}
 
 const codeEl = document.getElementById('code')
 const resultEl = document.getElementById('result')
@@ -38,10 +57,11 @@ const CodeMirrorOptions = {
 const editor = CodeMirror.fromTextArea(codeEl, CodeMirrorOptions);
 const resultEditor = CodeMirror.fromTextArea(resultEl, CodeMirrorOptions);
 
-editor.setValue(code)
+editor.setValue(js_beautify(generate(code), jsBeautyOptions))
 
 document.getElementById('btn-send').addEventListener('click', async () => {
   let res = await eval(editor.getValue())
+  console.log(res);
   resultEditor.setValue(JSON.stringify(res, null, "\t"))
 });
 

@@ -1,17 +1,23 @@
 import { terser } from "rollup-plugin-terser";
 
+const pkg = require('./package.json')
+
 export default {
   input: 'src/main.js',
   output: [
     {
       name: 'Jaxo',
-      file: 'build/index.js',
-      format: 'umd'
+      file: pkg.main,
+      format: 'umd',
+      sourcemap: false
     },
     {
-      file: 'build/index.esm.js',
-      format: 'esm'
+      file: pkg.module,
+      format: 'esm',
+      sourcemap: false
     }
   ],
-  plugins: [terser()]
+  plugins: [
+    process.env.NODE_ENV === 'production' ? terser() : ''
+  ]
 };

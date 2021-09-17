@@ -50,9 +50,9 @@ h1 {color: #607d8b;}
 
 a { color: inherit; text-decoration: none;}
 
-button {
+button ,select{
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: .6px;
   line-height: 24px;
@@ -71,5 +71,7 @@ button {
 
   cursor: pointer;
 }
+
+select {padding: 9px;}
 
 .d-flex{display: flex; align-items: center;}

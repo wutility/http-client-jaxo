@@ -5,13 +5,13 @@ const Jaxo = {
     async: true
   },
   xhr: new XMLHttpRequest()
-}
+};
 
 Jaxo.NormalizeMethod = method => {
   const methods = ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST', 'PUT'];
-  let upper = method.toUpperCase()
+  let upper = method.toUpperCase();
   return methods.includes(upper) ? upper : method
-}
+};
 
 Jaxo.Response = function () {
   let strHeaders = this.xhr.getAllResponseHeaders().split(/\n|\r\n/g);
@@ -34,16 +34,16 @@ Jaxo.Response = function () {
     statusText: this.xhr.statusText,
     headers
   };
-}
+};
 
 Jaxo.FormatData = function () {
   const { headers, data } = this.options;
-  const isJson = headers['Content-Type'] && headers['Content-Type'].includes('application/json')
+  const isJson = headers['Content-Type'] && headers['Content-Type'].includes('application/json');
   return isJson ? JSON.stringify(data) : data
-}
+};
 
 Jaxo.send = function (ops) {
-  if (typeof ops === 'string') { this.options.url = ops }
+  if (typeof ops === 'string') { this.options.url = ops; }
   else { this.options = { ...this.options, ...ops }; }
 
   return new Promise((resolve, reject) => {
@@ -60,29 +60,29 @@ Jaxo.send = function (ops) {
     }
 
     this.xhr.onload = function () {
-      setTimeout(() => { resolve(Jaxo.Response()) }, 0)
-    }
+      setTimeout(() => { resolve(Jaxo.Response()); }, 0);
+    };
 
     const onFail = e => {
       if (e.type === 'abort') {
-        reject(new DOMException('Aborted', 'AbortError'))
+        reject(new DOMException('Aborted', 'AbortError'));
       }
       else {
-        reject(new TypeError('Network request failed ' + e.type))
+        reject(new TypeError('Network request failed ' + e.type));
       }
-    }
+    };
 
     const onProgress = (e) => {
       if (e.lengthComputable) {
         let percent = e.loaded / e.total * 100;
-        this.options.onProgress(percent)
+        this.options.onProgress(percent);
       } else {
         reject(new TypeError('Unable to compute progress information since the total size is unknown'));
       }
-    }
+    };
 
     this.xhr.onreadystatechange = () => {
-      self = this
+      self = this;
       if (this.xhr.readyState === 4) {
         setTimeout(() => {
           self.xhr.removeEventListener('abort', onFail);
@@ -93,16 +93,16 @@ Jaxo.send = function (ops) {
           }
         }, 0);
       }
-    }
+    };
 
     // send data
     this.xhr.timeout = timeout;
     this.xhr.send(Jaxo.FormatData(data));
 
     // handle fail events
-    this.xhr.addEventListener('timeout', onFail)
-    this.xhr.addEventListener('error', onFail)
-    this.xhr.addEventListener('abort', onFail)
+    this.xhr.addEventListener('timeout', onFail);
+    this.xhr.addEventListener('error', onFail);
+    this.xhr.addEventListener('abort', onFail);
 
     if (this.options.onProgress) {
       method === 'GET'
@@ -110,7 +110,7 @@ Jaxo.send = function (ops) {
         : this.xhr.upload.addEventListener('progress', onProgress);
     }
   });
-}
+};
 
 Jaxo.retry = async (fn, nb) => {
   try {
@@ -119,6 +119,6 @@ Jaxo.retry = async (fn, nb) => {
     if (nb > 1) return Jaxo.retry(fn, nb - 1)
     else return await fn
   }
-}
+};
 
-export default Jaxo
+export default Jaxo;
