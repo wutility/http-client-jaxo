@@ -38,16 +38,24 @@ Jaxo.Response = function () {
 
 Jaxo.FormatData = function () {
   const { headers, data } = this.options;
-  const isJson = headers['Content-Type'] && headers['Content-Type'].includes('application/json')
-  return isJson ? JSON.stringify(data) : data
+  return headers.get('Content-Type').includes('application/json')
+    ? JSON.stringify(data)
+    : data
 }
 
 Jaxo.send = function (ops) {
   if (typeof ops === 'string') { this.options.url = ops }
-  else { this.options = { ...this.options, ...ops }; }
+  else {
+    // normalize headers
+    if (ops.headers) ops.headers = new Headers(ops.headers)
+
+    this.options = {
+      ...this.options,
+      ...ops
+    };
+  }
 
   return new Promise((resolve, reject) => {
-
     const { method, headers, async, url, data, timeout } = this.options;
 
     this.xhr.open(this.NormalizeMethod(method), url, async);

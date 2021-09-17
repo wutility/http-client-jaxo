@@ -36,7 +36,6 @@ let code = samples[selectSamples.value];
 selectSamples.onchange = e => {
   code = samples[e.target.value];
   editor.setValue(js_beautify(generate(code), jsBeautyOptions))
-  console.log(generate(code));
 }
 
 const codeEl = document.getElementById('code')
