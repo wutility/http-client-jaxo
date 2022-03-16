@@ -18,11 +18,9 @@ header {
 }
 
 .container {
-  width: 100%;
+  width: 100vw;
   height: calc(100vh - 75px);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  display: flex;
   padding: 10px;
 }
 

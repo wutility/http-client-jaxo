@@ -56,6 +56,8 @@ const CodeMirrorOptions = {
 const editor = CodeMirror.fromTextArea(codeEl, CodeMirrorOptions);
 const resultEditor = CodeMirror.fromTextArea(resultEl, CodeMirrorOptions);
 
+Split(['#code-wrapper', '#result-wrapper'], {sizes: [50, 50], minSize: [10, 10]})
+
 editor.setValue(js_beautify(generate(code), jsBeautyOptions))
 
 document.getElementById('btn-send').addEventListener('click', async () => {

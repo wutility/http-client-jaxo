@@ -9,4 +9,5 @@ production/
 .vscode
 .env
 .env.local
+yarn.lock
 package-lock.json

@@ -38,7 +38,7 @@ Jaxo.Response = function () {
 
 Jaxo.FormatData = function () {
   const { headers, data } = this.options;
-  return headers.get('Content-Type').includes('application/json')
+  return headers && headers.get('Content-Type').includes('application/json')
     ? JSON.stringify(data)
     : data
 }
