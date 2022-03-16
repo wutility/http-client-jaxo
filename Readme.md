@@ -38,6 +38,7 @@ const options = {
 Jaxo.send(options: Object | String) : Promise
 
 // cancel request (xhr is XMLHttpRequest object)
+// Read more here (https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest)
 Jaxo.xhr.abort()
 ```
 
@@ -57,7 +58,7 @@ Jaxo.send('https://jsonplaceholder.typicode.com/users')
 
 ```js
 document.getElementById('form-file')
-  .addEventListener('submit', e => {
+  .addEventListener('submit', async e => {
 
     let file = e.target.elements[0].files[0];
 
@@ -66,17 +67,18 @@ document.getElementById('form-file')
     formData.append('image', file);
     formData.append('name', 'testing file');
 
-    let response = await Jaxo.send({
-      url: 'https://api.imgbb.com/1/upload',
-      method: 'POST',
-      data: formData
-    })
-      .then(response => {
-        console.log(response);    
-      })
-      .catch(error => {
-        console.log(error.message);
+    try {
+      let response = await Jaxo.send({
+        url: 'https://api.imgbb.com/1/upload',
+        method: 'POST',
+        data: formData
       });
+
+      console.log(response);    
+    }
+    catch(e) {
+      console.log(error.message);
+    }
 });
 ```
 
